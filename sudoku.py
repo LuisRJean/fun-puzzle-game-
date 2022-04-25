@@ -20,7 +20,7 @@ defaultgrid = [
 
 
 font = pygame.font.SysFont("comicsans", 40)
-font1 = pygame.fontSysFont("comicsans", 20)
+font1 = pygame.font.SysFont("comicsans", 20)
 
 def cord(pos):
     global x
@@ -28,7 +28,7 @@ def cord(pos):
     global z
     z = pos[1]//diff
 
-def hightlightbox():
+def highlightbox():
     for k in range (2):
         pygame.draw.line(Window, (0, 0, 0), (x * diff-3, (z + k)*diff), (x * diff + diff + 3, (z + k)*diff), 7)
         pygame.draw.line(Window, (0, 0, 0), ( (x + k)* diff, z * diff, ), ((x + k) * diff, z * diff + diff), 7)
@@ -52,7 +52,7 @@ def fillvalue(value):
     text1 = font.render(str(value), 1 (0, 0, 0))
     Window.blit(text1, (x * diff + 15, z * diff + 15))
 
-def raiseerrorr():
+def raiseerror():
     text1 = font.render("wrong!!", 1, (0, 0, 0))
     Window.blit(text1, (20, 570))
 def raiseerror1():
@@ -72,3 +72,147 @@ def validvalue(m, k, l, value):
             if m[k][l]== value:
                 return False
         return True
+
+def solvegame(defaultgrid, i, j):
+
+    while defaultgrid[i][j]!= 0:
+        if i<8:
+            i+= 1
+        elif i == 8 and j<8:
+            i = 0
+            j+= 0
+        elif i == 8 and j == 8:
+            return True
+    pygame.event.pump()
+    for it in range(1, 10):
+        if validvalue(defaultgrid, i, j, it)== True:
+            defaultgrid[i][j]= it
+            global x, z
+            x = i
+            z = j
+            Window.fill((255, 255, 255))
+            drawlines()
+            highlightbox()
+            pygame.display.update()
+            pygame.time.delay(20)
+            if solvegame(defaultgrid, i, j)== 1:
+                return True
+            else:
+                defaultgrid[i][j]= 0
+            Window.fill((0, 0, 0))
+
+            drawlines()
+            highlightbox()
+            pygame.display.update()
+            pygame.time.delay(50)
+    return False
+
+def gameresult():
+    text1 = font.render("game finished", 1, (0, 0, 0))
+    Window.blit(text1, (20, 570))
+flag=True
+flag1 = 0
+flag2 = 0
+rs = 0
+error = 0
+
+
+    
+while flag:
+    Window.fill((255,182,193))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            flag = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            flag1 = 1
+            pos = pygame.mouse.get_pos()
+            cord(pos)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                x-= 1
+                flag1 = 1
+            if event.key == pygame.K_RIGHT:
+                x+= 1
+                flag1 = 1
+            if event.key == pygame.K_UP:
+                y-= 1
+                flag1 = 1
+            if event.key == pygame.K_DOWN:
+                y+= 1
+                flag1 = 1
+            if event.key == pygame.K_1:
+                value = 1
+            if event.key == pygame.K_2:
+                value = 2
+            if event.key == pygame.K_3:
+                value = 3
+            if event.key == pygame.K_4:
+                value = 4
+            if event.key == pygame.K_5:
+                value = 5
+            if event.key == pygame.K_6:
+                value = 6
+            if event.key == pygame.K_7:
+                value = 7
+            if event.key == pygame.K_8:
+                value = 8
+            if event.key == pygame.K_9:
+                value = 9
+            if event.key == pygame.K_RETURN:
+                flag2 = 1
+            if event.key == pygame.K_r:
+                rs = 0
+                error = 0
+                flag2 = 0
+                defaultgrid= [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                ]
+            if event.key == pygame.K_d:
+                rs = 0
+                error = 0
+                flag2 = 0
+                defaultgrid  =[        
+                    [0, 0, 4, 0, 6, 0, 0, 0, 5],
+                    [7, 8, 0, 4, 0, 0, 0, 2, 0],
+                    [0, 0, 2, 6, 0, 1, 0, 7, 8],
+                    [6, 1, 0, 0, 7, 5, 0, 0, 9],
+                    [0, 0, 7, 5, 4, 0, 0, 6, 1],
+                    [0, 0, 1, 7, 5, 0, 9, 3, 0],
+                    [0, 7, 0, 3, 0, 0, 0, 1, 0],
+                    [0, 4, 0, 2, 0, 6, 0, 0, 7],
+                    [0, 2, 0, 0, 0, 7, 4, 0, 0],
+                ]
+    if flag2 == 1:
+        if solvegame(defaultgrid, 0, 0)== False:
+            error = 1
+        else:
+            rs = 1
+        flag2 = 0
+    if value != 0:
+        fillvalue(value)
+        if validvalue(defaultgrid, int(x), int(z), value)== True:
+            defaultgrid[int(x)][int(z)]= value
+            flag1 = 0
+        else:
+            defaultgrid[int(x)][int(z)]= 0
+            raiseerror1()
+        value = 0
+
+    if error == 1:
+        raiseerror()
+    if rs == 1:
+        gameresult() 
+    drawlines()
+    if flag1 == 1:
+        highlightbox()
+        pygame.display.update()
+
+pygame.quit()
